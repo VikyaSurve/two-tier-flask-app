@@ -22,9 +22,8 @@ services:
       start_period: 60s
 
   flask-app:
-    build:
-      context: .
-    container_name: vmsurve/two-tier-flask-app:latest
+    image: vmsurve/two-tier-flask-app:latest
+    container_name: flask-app
     ports:
       - "5000:5000"
     environment:
