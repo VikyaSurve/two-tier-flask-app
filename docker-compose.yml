@@ -2,8 +2,9 @@ version: "3.8"
 
 services:
   mysql:
-    user: "${UID}:${GID}" 
     image: mysql:5.7
+    user: "${UID}:${GID}" 
+    entrypoint: ["/bin/sh", "-c", "chown -R mysql:mysql /var/lib/mysql && exec docker-entrypoint.sh mysqld"]
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
