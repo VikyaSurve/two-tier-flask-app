@@ -12,13 +12,11 @@ pipeline{
         }
         stage("Build"){
             steps{
-               // Make sure the current user has the right permissions before building
-                    sh """
-                        # Fixing permissions for the current directory before Docker build
-                        sudo chown -R $(whoami):$(whoami) .
-                        sudo chmod -R 755 .
-                        docker build -t two-tier-flask-app .
-                    """
+               sh """
+                    sudo chown -R ${whoami}:${whoami} .
+                    sudo chmod -R 755 .
+                    docker build -t two-tier-flask-app .
+                """
             }
             
         }
