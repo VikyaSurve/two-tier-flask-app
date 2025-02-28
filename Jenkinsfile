@@ -40,8 +40,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying application..."
-                    sh "docker compose up -d --build flask-app"
-                    """
+                    sh "docker compose up -d --build flask-app" 
                 }
             }
         }
