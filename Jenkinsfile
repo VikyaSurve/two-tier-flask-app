@@ -1,81 +1,66 @@
-pipeline {
-    agent { label "dev" }
+pipeline{
+    
+    agent { label "dev"}
+
     environment {
         UID = sh(script: 'id -u', returnStdout: true).trim()
         GID = sh(script: 'id -g', returnStdout: true).trim()
     }
-    stages {
-        stage("Code Clone") {
-            steps {
-                script {
-                    echo "Cloning repository..."
-                    git url: "https://github.com/Vikas-DevOpsPractice/two-tier-flask-app.git", branch: "dev"
-                }
-            }
-        }
-        stage("Build"){
+
+    stages{
+        stage("Code Clone"){
             steps{
-                sh "docker build -t two-tier-flask-app ."
+               script{
+                    git : "https://github.com/Vikas-DevOpsPractice/two-tier-flask-app.git", branch: "dev"
+               }
             }
-            
         }
         stage("Test") {
             steps {
-                script {
-                    echo "Running tests..."
-                }
+                echo "Developer / Tester tests likh ke dega..."
             }
         }
 
         stage("Push to Docker Hub") {
             steps {
-                script {
-                    withCredentials([usernamePassword(
-                        credentialsId: "dockerhubcreds",
-                        passwordVariable: "dockerhubPass",
-                        usernameVariable: "dockerhubUser"
-                    )]) {
-                        echo "Logging into Docker Hub..."
-                        sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
-                        sh "docker image tag two-tier-flask-app ${env.dockerhubUser}/two-tier-flask-app"
-                        sh "docker push ${env.dockerhubUser}/two-tier-flask-app:latest"
-                    }
+                withCredentials([usernamePassword(
+                    credentialsId:"dockerhubcreds",
+                    passwordVariable:"dockerhubPass",
+                    usernameVariable:"dockerhubUser"
+                    )])
+                {
+                    sh "docker login -u ${env.dockerhubUser} -p ${env.dockerhubPass}"
+                    sh "docker image tag two-tier-flask-app ${env.dockerhubUser}/two-tier-flask-app"
+                    sh "docker push ${env.dockerhubUser}/two-tier-flask-app:latest"
                 }
             }
         }
 
         stage("Deploy") {
             steps {
-                script {
-                    echo "Deploying application..."
-                    sh "docker compose up -d --build flask-app" 
-                }
+                sh """
+                docker compose pull
+                docker compose up -d --build --force-recreate flask-app
+                """
             }
         }
     }
 
-    post {
-        success {
-            script {
-                echo "Build Succeeded. Sending Email..."
-                emailext(
-                    from: 'vikasmsurve@gmail.com',
-                    to: 'vikasmsurve@gmail.com',
-                    subject: 'Build Success: Demo CICD App',
-                    body: '🎉 Build was successful for Demo CICD App! \n\n View Logs in Jenkins.'
-                )
+    post{
+        success{
+            script{
+                emailext from: 'vikasmsurve@gmail.com',
+                to: 'vikasmsurve@gmail.com',
+                body: 'Build success for Demo CICD App',
+                subject: 'Build success for Demo CICD App'
             }
         }
-        
-        failure {
-            script {
-                echo "Build Failed. Sending Failure Email..."
-                emailext(
-                    from: 'vikasmsurve@gmail.com',
-                    to: 'vikasmsurve@gmail.com',
-                    subject: '❌ Build Failed: Demo CICD App',
-                    body: '🚨 Build failed for Demo CICD App. Check Jenkins for details!'
-                )
+        failure{
+            script{
+                emailext from: 'vikasmsurve@gmail.com',
+                to: 'vikasmsurve@gmail.com',
+                body: 'Build Failed for Demo CICD App',
+                subject: 'Build Failed for Demo CICD App'
             }
         }
     }
