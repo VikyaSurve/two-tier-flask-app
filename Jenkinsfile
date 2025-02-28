@@ -11,7 +11,7 @@ pipeline{
         stage("Code Clone"){
             steps{
                script{
-                    git : "https://github.com/Vikas-DevOpsPractice/two-tier-flask-app.git", branch: "dev"
+                    git url: "https://github.com/Vikas-DevOpsPractice/two-tier-flask-app.git", branch: "dev"
                }
             }
         }
