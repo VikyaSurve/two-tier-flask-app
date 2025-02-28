@@ -20,7 +20,6 @@ pipeline {
             steps {
                 script {
                     echo "Running tests..."
-                    sh "exit 1" // ❌ Force failure to test email notification
                 }
             }
         }
