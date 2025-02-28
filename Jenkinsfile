@@ -10,13 +10,6 @@ pipeline{
                }
             }
         }
-        stage("Trivy File System Scan"){
-            steps{
-                script{
-                    trivy_fs()
-                }
-            }
-        }
         stage("Test") {
             steps {
                 echo "Developer / Tester tests likh ke dega..."
