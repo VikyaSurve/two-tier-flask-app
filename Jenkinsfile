@@ -1,11 +1,6 @@
 pipeline {
     agent { label "dev" }
 
-    environment {
-        UID = sh(script: 'id -u', returnStdout: true).trim()
-        GID = sh(script: 'id -g', returnStdout: true).trim()
-    }
-
     stages {
         stage("Code Clone") {
             steps {
