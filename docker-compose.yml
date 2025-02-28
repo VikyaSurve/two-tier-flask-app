@@ -2,8 +2,7 @@ version: "3.8"
 
 services:
   mysql:
-    image: mysql:5.7
-    user: "${UID}:${GID}" 
+    image: mysql:5.7 
     container_name: mysql
     environment:
       MYSQL_ROOT_PASSWORD: root
@@ -12,6 +11,8 @@ services:
       MYSQL_PASSWORD: admin
     volumes:
       - ./mysql-data:/var/lib/mysql
+    user: "1000:1000" 
+    entrypoint: ["sh", "-c", "chown -R mysql:mysql /var/lib/mysql && exec mysqld"]
     networks:
       - twotier
     healthcheck:
