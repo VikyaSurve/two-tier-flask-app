@@ -15,6 +15,12 @@ pipeline{
                }
             }
         }
+        stage("Build"){
+            steps{
+                sh "docker build -t two-tier-flask-app ."
+            }
+            
+        }
         stage("Test") {
             steps {
                 echo "Developer / Tester tests likh ke dega..."
