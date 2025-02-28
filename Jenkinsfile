@@ -1,7 +1,12 @@
 pipeline{
     
-    agent { label "dev"};
-    
+    agent { label "dev"}
+
+    environment {
+        UID = sh(script: 'id -u', returnStdout: true).trim()
+        GID = sh(script: 'id -g', returnStdout: true).trim()
+    }
+
     stages{
         stage("Code Clone"){
             steps{
@@ -33,11 +38,15 @@ pipeline{
 
         stage("Deploy") {
             steps {
-                sh "docker compose down && docker compose up -d --build flask-app"
+                sh """
+                docker compose pull
+                docker compose up -d --build --force-recreate flask-app
+                """
             }
         }
     }
-post{
+
+    post{
         success{
             script{
                 emailext from: 'mentor@trainwithshubham.com',
