@@ -12,11 +12,7 @@ pipeline{
         }
         stage("Build"){
             steps{
-               sh """
-                    sudo chown -R ${whoami}:${whoami} .
-                    sudo chmod -R 755 .
-                    docker build -t two-tier-flask-app .
-                """
+               sh "docker build -t two-tier-flask-app ."
             }
             
         }
