@@ -40,9 +40,7 @@ pipeline {
             steps {
                 script {
                     echo "Deploying application..."
-                    sh """
-                    docker compose pull
-                    docker compose up -d --build --force-recreate flask-app
+                    sh "docker compose up -d --build flask-app"
                     """
                 }
             }
